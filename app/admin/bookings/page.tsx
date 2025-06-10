@@ -111,6 +111,8 @@ export default function BookingsPage() {
 
   const getStatusBadge = (status: string) => {
     const statusClasses = {
+      pending: "bg-yellow-500",
+      Pending: "bg-yellow-500",
       PENDING: "bg-yellow-500",
       Confirmed: "bg-green-500",
       Cancelled: "bg-red-500",

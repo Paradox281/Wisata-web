@@ -173,7 +173,7 @@ export default function Home() {
             Welcome to <span ref={typedRef}></span>
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-2xl mx-auto text-blue-100">
-            Discover amazing destinations and create unforgettable memories with our curated travel experiences
+          Temukan destinasi menakjubkan dan ciptakan kenangan tak terlupakan dengan pengalaman perjalanan pilihan kami
           </p>
         </motion.div>
 
@@ -207,13 +207,7 @@ export default function Home() {
                     >
                       <h3 className="text-3xl md:text-5xl font-bold mb-4 leading-tight">{slide.title}</h3>
                       <p className="text-lg md:text-xl mb-6 text-blue-100">{slide.subtitle}</p>
-                      <Button
-                        asChild
-                        size="lg"
-                        className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white border-0 shadow-lg"
-                      >
-                        <Link href={slide.link}>{slide.buttonText}</Link>
-                      </Button>
+                     
                     </motion.div>
                   </div>
                 </div>
@@ -260,7 +254,7 @@ export default function Home() {
         </motion.div>
 
         <Button asChild size="lg" className="bg-white text-blue-600 hover:bg-blue-50 relative z-10">
-          <Link href="/destinations">Explore Destinations</Link>
+          <Link href="/destinations">Jelajahi Tujuan</Link>
         </Button>
 
         <div className="absolute bottom-10 animate-bounce">
@@ -273,10 +267,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold mb-4" data-aos="fade-up">
-              🔥 Special Offers & Promotions
+              🔥 Penawaran Khusus & Promosi
             </h2>
             <p className="text-xl text-gray-600" data-aos="fade-up" data-aos-delay="100">
-              Limited time deals on our most popular destinations
+            Penawaran waktu terbatas di destinasi terpopuler kami
             </p>
           </div>
 
@@ -326,11 +320,11 @@ export default function Home() {
                                     Rp {destination.hargaAsli.toLocaleString()}
                                   </span>
                                   <span className="text-red-600 font-bold text-lg">
-                                    Rp {destination.hargaDiskon.toLocaleString()}
+                                    Rp {(destination.hargaAsli - destination.hargaDiskon).toLocaleString()}
                                   </span>
                                 </div>
                                 <div className="text-green-600 font-bold text-sm">
-                                  Save Rp {(destination.hargaAsli - destination.hargaDiskon).toLocaleString()}
+                                  Save Rp {destination.hargaDiskon.toLocaleString()}
                                 </div>
                               </div>
 
@@ -374,9 +368,10 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-12" data-aos="fade-up">
-            <p className="text-gray-600 mb-4">*Offers valid until stocks last. Terms and conditions apply.</p>
+            <p className="text-gray-600 mb-4">* Penawaran berlaku hingga persediaan habis. Syarat dan ketentuan berlaku.</p>
             <Button asChild variant="outline" size="lg">
-              <Link href="/destinations">View All Promotions</Link>
+              <Link href="/destinations">Lihat Semua Promosi
+              </Link>
             </Button>
           </div>
         </div>
@@ -386,7 +381,7 @@ export default function Home() {
       <section id="destinations" className="py-20 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12" data-aos="fade-up">
-            Popular Destinations
+            Destinasi Populer
           </h2>
 
           {/* Destination Slider */}
@@ -486,7 +481,7 @@ export default function Home() {
 
           <div className="text-center mt-12">
             <Button asChild size="lg">
-              <Link href="/destinations">View All Destinations</Link>
+              <Link href="/destinations">Tampilkan Semua Destinasi</Link>
             </Button>
           </div>
         </div>
@@ -496,7 +491,7 @@ export default function Home() {
       <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-7xl mx-auto">
           <h2 className="text-4xl font-bold text-center mb-12" data-aos="fade-up">
-            What Our Travelers Say
+          Apa kata Pelanggan
           </h2>
 
           <div className="relative" data-aos="fade-up" data-aos-delay="200">
@@ -572,10 +567,11 @@ export default function Home() {
       <section className="py-20 px-4 bg-blue-600 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl font-bold mb-6" data-aos="fade-up">
-            Ready for Your Next Adventure?
+          Siap untuk Petualangan Anda Berikutnya?
           </h2>
           <p className="text-xl mb-8" data-aos="fade-up" data-aos-delay="100">
-            Join thousands of travelers who have experienced the magic of Altura tours.
+            
+            Bergabunglah dengan ribuan wisatawan yang telah merasakan keajaiban tur Altura.
           </p>
           <Button
             asChild
@@ -584,7 +580,7 @@ export default function Home() {
             data-aos="fade-up"
             data-aos-delay="200"
           >
-            <Link href="/destinations">Book Now</Link>
+            <Link href="/destinations">Pesan Sekarang</Link>
           </Button>
         </div>
       </section>
@@ -595,38 +591,26 @@ export default function Home() {
 // Enhanced banner slides data
 const bannerSlides = [
   {
-    title: "Summer Sale 2024",
-    subtitle: "Up to 50% off on selected destinations • Limited time offer",
-    image: "/placeholder.svg?height=500&width=1200",
-    link: "/destinations",
-    buttonText: "Explore Deals",
+    title: "Lembah Harau",
+    subtitle: "Diskon hingga 50% di destinasi tertentu • Penawaran waktu terbatas",
+    image: "/LEMBAH-HARAU-Destinasi-tour-wisata-Sumbar-favorit-disekitar-Payakumbuh-50-Kota-Sumatera-Barat.jpg",
+    
+    
   },
   {
-    title: "Bali Adventure Package",
-    subtitle: "7 days of culture, beaches & temples • All-inclusive experience",
-    image: "/placeholder.svg?height=500&width=1200",
-    link: "/detail/1",
-    buttonText: "Book Bali Trip",
+    title: "Kapalo Banda",
+    subtitle: "Pengalaman terbaik bagi keluarga",
+    image: "/143098.jpg",
+    
+    
   },
   {
-    title: "Japan Cultural Experience",
-    subtitle: "Discover ancient traditions in Kyoto • Authentic local experiences",
-    image: "/placeholder.svg?height=500&width=1200",
-    link: "/detail/2",
-    buttonText: "Explore Japan",
+    title: "Batang Agam",
+    subtitle: "Tempat-tempat keren menanti anda",
+    image: "/images (3).jpeg",
+  
+    
   },
-  {
-    title: "Early Bird Special",
-    subtitle: "Book 3 months ahead and save 30% • Best price guarantee",
-    image: "/placeholder.svg?height=500&width=1200",
-    link: "/destinations",
-    buttonText: "Book Early",
-  },
-  {
-    title: "Luxury Maldives Escape",
-    subtitle: "Overwater villas & pristine beaches • Ultimate relaxation",
-    image: "/placeholder.svg?height=500&width=1200",
-    link: "/detail/5",
-    buttonText: "Book Luxury",
-  },
+  
+  
 ]

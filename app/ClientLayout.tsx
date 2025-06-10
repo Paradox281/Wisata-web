@@ -62,8 +62,7 @@ export function ClientLayout({
                       <span className="ml-2 text-xl font-bold">Altura</span>
                     </div>
                     <p className="text-gray-400 mb-4">
-                      Discover amazing destinations and create unforgettable memories with our curated travel
-                      experiences.
+                    Temukan destinasi menakjubkan dan ciptakan kenangan tak terlupakan dengan pengalaman perjalanan pilihan kami.
                     </p>
                     <div className="flex space-x-4">
                       <a href="#" className="text-gray-400 hover:text-white transition-colors">
@@ -96,11 +95,7 @@ export function ClientLayout({
                           About Us
                         </Link>
                       </li>
-                      <li>
-                        <Link href="#" className="text-gray-400 hover:text-white transition-colors">
-                          Terms & Conditions
-                        </Link>
-                      </li>
+                      
                       <li>
                         <Link href="#" className="text-gray-400 hover:text-white transition-colors">
                           Privacy Policy
@@ -114,27 +109,13 @@ export function ClientLayout({
                     <ul className="space-y-2">
                       <li>
                         <Link href="/detail/1" className="text-gray-400 hover:text-white transition-colors">
-                          Bali, Indonesia
+                          Harau, Payakumbuh
                         </Link>
                       </li>
-                      <li>
-                        <Link href="/detail/2" className="text-gray-400 hover:text-white transition-colors">
-                          Kyoto, Japan
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/detail/3" className="text-gray-400 hover:text-white transition-colors">
-                          Santorini, Greece
-                        </Link>
-                      </li>
-                      <li>
-                        <Link href="/detail/5" className="text-gray-400 hover:text-white transition-colors">
-                          Maldives
-                        </Link>
-                      </li>
+                      
                       <li>
                         <Link href="/detail/6" className="text-gray-400 hover:text-white transition-colors">
-                          Paris, France
+                          Kelok Sembilan, Sumbar
                         </Link>
                       </li>
                     </ul>
@@ -145,11 +126,11 @@ export function ClientLayout({
                     <ul className="space-y-4">
                       <li className="flex items-start">
                         <MapPin className="h-5 w-5 text-blue-400 mr-2 mt-0.5" />
-                        <span className="text-gray-400">123 Travel Street, Tourism City, 12345</span>
+                        <span className="text-gray-400">Sawah Padang , Payakumbuh,Sumatra Barat ,Indonesia</span>
                       </li>
                       <li className="flex items-center">
                         <Phone className="h-5 w-5 text-blue-400 mr-2" />
-                        <span className="text-gray-400">+1 (555) 123-4567</span>
+                        <span className="text-gray-400">+62 082287338654</span>
                       </li>
                       <li className="flex items-center">
                         <Mail className="h-5 w-5 text-blue-400 mr-2" />

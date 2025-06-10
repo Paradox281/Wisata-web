@@ -90,7 +90,7 @@ export default function DestinationsPage() {
     itinerary: "",
   });
   const router = useRouter();
-
+  const [regencies, setRegencies] = useState([]);
   const fetchDestinations = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -121,6 +121,16 @@ export default function DestinationsPage() {
     fetchDestinations();
   }, []);
 
+  useEffect(() => {
+    fetch("https://www.emsifa.com/api-wilayah-indonesia/api/regencies/13.json")
+      .then((response) => response.json())
+      .then((data) => setRegencies(data))
+      .catch((error) => console.error("Error fetching regencies:", error));
+  }, []);
+
+  const handleInputChanges = (e) => {
+    setFormData({ ...formData, location: e.target.value });
+  };
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -267,7 +277,7 @@ export default function DestinationsPage() {
                 Tambah Destinasi
               </Button>
             </DialogTrigger>
-            <DialogContent>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>{isEditMode ? "Edit Destinasi" : "Tambah Destinasi"}</DialogTitle>
                 <DialogDescription>
@@ -275,80 +285,90 @@ export default function DestinationsPage() {
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Nama Destinasi</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                  />
+                <div className="grid gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Nama Destinasi</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="location">Lokasi</Label>
+                    <select
+                      id="location"
+                      name="location"
+                      value={formData.location}
+                      onChange={handleInputChanges}
+                      required
+                      className="w-full border rounded p-2"
+                    >
+                      <option value="">Pilih Kabupaten/Kota</option>
+                      {regencies.map((regency) => (
+                        <option key={regency.id} value={regency.name}>
+                          {regency.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="image">Gambar</Label>
+                    <Input
+                      id="image"
+                      name="image"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      required={!isEditMode}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="price">Harga</Label>
+                    <Input
+                      id="price"
+                      name="price"
+                      type="number"
+                      value={formData.price}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="description">Deskripsi</Label>
+                    <Textarea
+                      id="description"
+                      name="description"
+                      value={formData.description}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="quota">Kuota</Label>
+                    <Input
+                      id="quota"
+                      name="quota"
+                      type="number"
+                      value={formData.quota}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="itinerary">Itinerary</Label>
+                    <Textarea
+                      id="itinerary"
+                      name="itinerary"
+                      value={formData.itinerary}
+                      onChange={handleInputChange}
+                      required
+                    />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="location">Lokasi</Label>
-                  <Input
-                    id="location"
-                    name="location"
-                    value={formData.location}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="image">Gambar</Label>
-                  <Input
-                    id="image"
-                    name="image"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    required={!isEditMode}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="price">Harga</Label>
-                  <Input
-                    id="price"
-                    name="price"
-                    type="number"
-                    value={formData.price}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Deskripsi</Label>
-                  <Textarea
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="quota">Kuota</Label>
-                  <Input
-                    id="quota"
-                    name="quota"
-                    type="number"
-                    value={formData.quota}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="itinerary">Itinerary</Label>
-                  <Textarea
-                    id="itinerary"
-                    name="itinerary"
-                    value={formData.itinerary}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <DialogFooter>
+                <DialogFooter className="sticky bottom-0 bg-background pt-4">
                   <Button type="submit">
                     {isEditMode ? "Simpan Perubahan" : "Tambah Destinasi"}
                   </Button>

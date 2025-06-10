@@ -153,10 +153,10 @@ export default function DestinationsPage() {
                       {destination.hargaDiskon ? (
                         <>
                           <span className="text-gray-400 line-through text-sm">
-                            {formatPrice(destination.price)}
+                          {(destination.price).toLocaleString()}
                           </span>
                           <span className="text-red-600 font-bold text-lg">
-                            {formatPrice(destination.hargaDiskon)}
+                          {(destination.price - destination.hargaDiskon).toLocaleString()}
                           </span>
                         </>
                       ) : (

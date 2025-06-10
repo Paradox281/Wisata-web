@@ -32,6 +32,7 @@ interface DestinationPromo {
   discount: number;
   tanggalMulai: string;
   tanggalBerakhir: string;
+  hargaDiskon: number;
 }
 
 interface DestinationFacility {
@@ -92,6 +93,7 @@ export default function DestinationDetailPage({ params }: { params: { id: string
     nama_diskon: "",
     deskripsi: "",
     hargaDiskon: "",
+    hargaSetelahDiskon: "",
     persentase_diskon: "",
     tanggal_mulai: "",
     tanggal_berakhir: "",
@@ -276,6 +278,30 @@ export default function DestinationDetailPage({ params }: { params: { id: string
     }
   };
 
+  // Tambahkan fungsi untuk menghitung harga diskon
+  const calculateDiscountedPrice = (price: number, discountPercentage: number) => {
+    const hargaDiskon = price * (discountPercentage / 100);
+    const hargaSetelahDiskon = price - hargaDiskon;
+    return {
+      hargaDiskon,
+      hargaSetelahDiskon
+    };
+  };
+
+  // Tambahkan useEffect untuk menghitung harga diskon otomatis
+  useEffect(() => {
+    if (destination && promoForm.persentase_diskon) {
+      const hargaPromo = destination.destination.price;
+      const persentaseDiskon = parseInt(promoForm.persentase_diskon);
+      const { hargaDiskon, hargaSetelahDiskon } = calculateDiscountedPrice(hargaPromo, persentaseDiskon);
+      setPromoForm(prev => ({ 
+        ...prev, 
+        hargaDiskon: hargaDiskon.toString(),
+        hargaSetelahDiskon: hargaSetelahDiskon.toString()
+      }));
+    }
+  }, [promoForm.persentase_diskon, destination]);
+
   if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -407,7 +433,7 @@ export default function DestinationDetailPage({ params }: { params: { id: string
                     Tambah Promo
                   </Button>
                 </DialogTrigger>
-                <DialogContent>
+                <DialogContent className="max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
                     <DialogTitle>Tambah Promo</DialogTitle>
                     <DialogDescription>
@@ -415,65 +441,83 @@ export default function DestinationDetailPage({ params }: { params: { id: string
                     </DialogDescription>
                   </DialogHeader>
                   <form onSubmit={handlePromoSubmit} className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="nama_diskon">Nama Promo</Label>
-                      <Input
-                        id="nama_diskon"
-                        value={promoForm.nama_diskon}
-                        onChange={(e) => setPromoForm(prev => ({ ...prev, nama_diskon: e.target.value }))}
-                        required
-                      />
+                    <div className="grid gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="nama_diskon">Nama Promo</Label>
+                        <Input
+                          id="nama_diskon"
+                          value={promoForm.nama_diskon}
+                          onChange={(e) => setPromoForm(prev => ({ ...prev, nama_diskon: e.target.value }))}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="deskripsi">Deskripsi</Label>
+                        <Input
+                          id="deskripsi"
+                          value={promoForm.deskripsi}
+                          onChange={(e) => setPromoForm(prev => ({ ...prev, deskripsi: e.target.value }))}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="persentase_diskon">Persentase Diskon (%)</Label>
+                        <Input
+                          id="persentase_diskon"
+                          type="number"
+                          value={promoForm.persentase_diskon}
+                          onChange={(e) => setPromoForm(prev => ({ ...prev, persentase_diskon: e.target.value }))}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="hargaDiskon">Harga Diskon</Label>
+                        <Input
+                          id="hargaDiskon"
+                          type="number"
+                          value={promoForm.hargaDiskon}
+                          readOnly
+                          className="bg-muted"
+                        />
+                        <p className="text-sm text-muted-foreground">
+                          Harga diskon = Harga Awal × (Persentase Diskon / 100)
+                        </p>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="hargaSetelahDiskon">Harga Setelah Diskon</Label>
+                        <Input
+                          id="hargaSetelahDiskon"
+                          type="number"
+                          value={promoForm.hargaSetelahDiskon}
+                          readOnly
+                          className="bg-muted"
+                        />
+                        <p className="text-sm text-muted-foreground">
+                          Harga setelah diskon = Harga Awal - Harga Diskon
+                        </p>
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="tanggal_mulai">Tanggal Mulai</Label>
+                        <Input
+                          id="tanggal_mulai"
+                          type="datetime-local"
+                          value={promoForm.tanggal_mulai}
+                          onChange={(e) => setPromoForm(prev => ({ ...prev, tanggal_mulai: e.target.value }))}
+                          required
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="tanggal_berakhir">Tanggal Berakhir</Label>
+                        <Input
+                          id="tanggal_berakhir"
+                          type="datetime-local"
+                          value={promoForm.tanggal_berakhir}
+                          onChange={(e) => setPromoForm(prev => ({ ...prev, tanggal_berakhir: e.target.value }))}
+                          required
+                        />
+                      </div>
                     </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="deskripsi">Deskripsi</Label>
-                      <Input
-                        id="deskripsi"
-                        value={promoForm.deskripsi}
-                        onChange={(e) => setPromoForm(prev => ({ ...prev, deskripsi: e.target.value }))}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="hargaDiskon">Harga Diskon</Label>
-                      <Input
-                        id="hargaDiskon"
-                        type="number"
-                        value={promoForm.hargaDiskon}
-                        onChange={(e) => setPromoForm(prev => ({ ...prev, hargaDiskon: e.target.value }))}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="persentase_diskon">Persentase Diskon</Label>
-                      <Input
-                        id="persentase_diskon"
-                        type="number"
-                        value={promoForm.persentase_diskon}
-                        onChange={(e) => setPromoForm(prev => ({ ...prev, persentase_diskon: e.target.value }))}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="tanggal_mulai">Tanggal Mulai</Label>
-                      <Input
-                        id="tanggal_mulai"
-                        type="datetime-local"
-                        value={promoForm.tanggal_mulai}
-                        onChange={(e) => setPromoForm(prev => ({ ...prev, tanggal_mulai: e.target.value }))}
-                        required
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="tanggal_berakhir">Tanggal Berakhir</Label>
-                      <Input
-                        id="tanggal_berakhir"
-                        type="datetime-local"
-                        value={promoForm.tanggal_berakhir}
-                        onChange={(e) => setPromoForm(prev => ({ ...prev, tanggal_berakhir: e.target.value }))}
-                        required
-                      />
-                    </div>
-                    <DialogFooter>
+                    <DialogFooter className="sticky bottom-0 bg-background pt-4">
                       <Button type="submit">Tambah Promo</Button>
                     </DialogFooter>
                   </form>

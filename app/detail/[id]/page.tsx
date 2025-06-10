@@ -171,7 +171,9 @@ export default async function DestinationDetailPage({ params }: PageProps) {
             <Card className="sticky top-24">
               <CardContent className="p-6">
                 <div className="text-center mb-6">
-                  <div className="text-3xl font-bold text-blue-600 mb-2">Rp {destination.harga.toLocaleString()}</div>
+                <div className="text-3xl font-bold text-blue-600 mb-2">
+                  Rp {(destination.harga - destination.hargaDiskon).toLocaleString()}
+                </div>
                   <p className="text-gray-600">per person</p>
                 </div>
 

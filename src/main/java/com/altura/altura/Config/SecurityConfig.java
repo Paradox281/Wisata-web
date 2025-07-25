@@ -48,7 +48,8 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(Arrays.asList(
             "http://localhost:3000", // Port default Next.js
             "http://localhost:8081", // Port default Expo
-            "http://localhost:19006"  // Port Expo web
+            "http://localhost:19006",  // Port Expo web
+            "https://altura.up.railway.app/"
         )); 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         configuration.setAllowedHeaders(Arrays.asList(

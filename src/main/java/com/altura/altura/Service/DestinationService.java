@@ -17,6 +17,7 @@ import com.altura.altura.Repository.FacilityDestinationRepository;
 import com.altura.altura.Repository.PromoRepository;
 import com.altura.altura.Repository.BookingRepository;
 import com.altura.altura.Repository.BookingParticipantRepository;
+import com.altura.altura.Repository.GalleryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.altura.altura.DTO.DestinationDetailResponse;
@@ -53,6 +54,9 @@ public class DestinationService {
     
     @Autowired
     private BookingParticipantRepository bookingParticipantRepository;
+
+    @Autowired
+    private GalleryRepository galleryRepository;
 
     // Mendapatkan semua destinasi dengan filter dan sorting
     public List<DestinationResponse> getAllDestinations(String location, String sortBy) {
@@ -165,15 +169,11 @@ public class DestinationService {
             }
         }
 
-        // Hapus semua galeri yang terkait
+        // Hapus semua galeri yang terkait (hanya data, tidak hapus file di MinIO)
         if (destination.getGalleries() != null) {
             for (Gallery gallery : destination.getGalleries()) {
-                // Jika ada file di MinIO, bisa tambahkan penghapusan file di sini
-                // minioService.deleteFile(gallery.getImageUrl());
-                // Untuk sekarang hanya hapus data galeri
-                // (Pastikan repository galeri tersedia jika perlu)
+                galleryRepository.delete(gallery);
             }
-            destination.getGalleries().clear();
         }
 
         // Hapus destinasi

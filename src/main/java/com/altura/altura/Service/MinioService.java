@@ -40,4 +40,18 @@ public class MinioService {
             throw new RuntimeException("Failed to upload file to MinIO", e);
         }
     }
+
+    public InputStream downloadFile(String objectName) {
+        try {
+            GetObjectResponse response = minioClient.getObject(
+                GetObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(objectName)
+                    .build()
+            );
+            return response;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to download file from MinIO", e);
+        }
+    }
 }

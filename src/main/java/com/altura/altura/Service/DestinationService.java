@@ -154,22 +154,29 @@ public class DestinationService {
             .filter(promo -> promo.getDestination() != null && 
                     promo.getDestination().getId().equals(destination.getId()))
             .collect(Collectors.toList());
-            
         for (Promo promo : promos) {
             promoRepository.delete(promo);
         }
-        
-        // Hapus semua facility destination yang terkait
-        List<FacilityDestination> facilityDestinations = facilityDestinationRepository.findAll().stream()
-            .filter(fd -> fd.getDestination() != null && 
-                    fd.getDestination().getId().equals(destination.getId()))
-            .collect(Collectors.toList());
-            
-        for (FacilityDestination fd : facilityDestinations) {
-            facilityDestinationRepository.delete(fd);
+
+        // Hapus semua fasilitas yang terkait
+        if (destination.getFacilities() != null) {
+            for (FacilityDestination fd : destination.getFacilities()) {
+                facilityDestinationRepository.delete(fd);
+            }
         }
-        
-        // Sekarang bisa menghapus destinasi
+
+        // Hapus semua galeri yang terkait
+        if (destination.getGalleries() != null) {
+            for (Gallery gallery : destination.getGalleries()) {
+                // Jika ada file di MinIO, bisa tambahkan penghapusan file di sini
+                // minioService.deleteFile(gallery.getImageUrl());
+                // Untuk sekarang hanya hapus data galeri
+                // (Pastikan repository galeri tersedia jika perlu)
+            }
+            destination.getGalleries().clear();
+        }
+
+        // Hapus destinasi
         destinationRepository.delete(destination);
     }
 

@@ -35,7 +35,7 @@ public class MinioService {
                     .build()
             );
             
-            return String.format("%s/%s/%s", minioEndpoint, bucketName, filename);
+            return filename; // hanya nama file
         } catch (Exception e) {
             throw new RuntimeException("Failed to upload file to MinIO", e);
         }

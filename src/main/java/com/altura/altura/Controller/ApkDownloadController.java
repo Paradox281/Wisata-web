@@ -25,7 +25,7 @@ public class ApkDownloadController {
     @Operation(summary = "Download file APK", description = "Download file .apk dari MinIO dengan nama file yang sudah pasti.")
     @GetMapping("/download")
     public ResponseEntity<InputStreamResource> downloadApk() {
-        String filename = "application-811a70db-fa22-4370-a5e7-15846d2f9645.apk";
+        String filename = "application-855e2406-82d0-4447-b680-10ed6d3b6ffc.apk";
         InputStream apkStream = minioService.downloadFile(filename);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename)

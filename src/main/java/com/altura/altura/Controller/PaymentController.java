@@ -83,9 +83,9 @@ public class PaymentController {
             return ResponseEntity.badRequest().body(response);
         }
         if (uploadBukti != null && !uploadBukti.isEmpty()) {
-            String minioUrl = minioService.uploadFile(uploadBukti);
-            String onlyFileName = minioUrl.substring(minioUrl.lastIndexOf("/") + 1);
+            String onlyFileName = minioService.uploadFile(uploadBukti); // langsung nama file
             payment.setUploadBukti(onlyFileName);
+
         } else {
             payment.setUploadBukti(null);
         }

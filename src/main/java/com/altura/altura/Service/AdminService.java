@@ -4,6 +4,7 @@ import com.altura.altura.DTO.*;
 import com.altura.altura.Model.*;
 import com.altura.altura.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,6 +32,12 @@ public class AdminService {
     
     @Autowired
     private PaymentRepository paymentRepository;
+
+    @Value("${minio.endpoint}")
+    private String minioEndpoint;
+
+    @Value("${minio.bucketName}")
+    private String minioBucket;
 
     public DashboardResponse getDashboardData() {
         DashboardResponse response = new DashboardResponse();
@@ -207,8 +214,6 @@ public class AdminService {
     }
 
     public List<Map<String, Object>> getAllBookings() {
-        String minioEndpoint = "http://192.168.1.8:9000";
-        String minioBucket = "wisata";
         return bookingRepository.findAll().stream()
                 .map(booking -> {
                     Map<String, Object> bookingMap = new HashMap<>();

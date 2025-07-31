@@ -245,7 +245,15 @@ public class DestinationService {
         // Set galleries
         if (destination.getGalleries() != null) {
             List<String> galleryUrls = destination.getGalleries().stream()
-                .map(Gallery::getImageUrl)
+                .map(gallery -> {
+                    String fileName = gallery.getImageUrl();
+                    if (fileName != null && !fileName.isEmpty()) {
+                        return minioEndpoint + "/" + minioBucket + "/" + fileName;
+                    } else {
+                        return null;
+                    }
+                })
+                .filter(url -> url != null)
                 .collect(Collectors.toList());
             response.setGalleries(galleryUrls);
         }

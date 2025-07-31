@@ -32,11 +32,17 @@ import org.springframework.data.repository.query.Param;
 import java.util.Comparator;
 import com.altura.altura.DTO.FacilityResponse;
 import com.altura.altura.DTO.GalleryResponse;
+import org.springframework.beans.factory.annotation.Value;
 
 @Service
 public class DestinationService {
     @Autowired
     private MinioService minioService;
+    
+    @Value("${minio.endpoint}")
+    private String minioEndpoint;
+    @Value("${minio.bucketName}")
+    private String minioBucket;
     
     @Autowired
     private DestinationRepository destinationRepository;
@@ -195,7 +201,13 @@ public class DestinationService {
         DestinationDetailResponse response = new DestinationDetailResponse();
         response.setId(destination.getId());
         response.setNama(destination.getName());
-        response.setImage(destination.getImageUrl());
+        // Ubah image menjadi URL lengkap
+        String imageUrl = destination.getImageUrl();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            response.setImage(minioEndpoint + "/" + minioBucket + "/" + imageUrl);
+        } else {
+            response.setImage(null);
+        }
         response.setDescription(destination.getDescription());
         response.setHarga(destination.getPrice());
         response.setLokasi(destination.getLocation());
@@ -282,7 +294,13 @@ public class DestinationService {
         response.setLocation(destination.getLocation());
         response.setPrice(destination.getPrice());
         response.setQuota(destination.getQuota());
-        response.setImageUrl(destination.getImageUrl());
+        // Ubah imageUrl menjadi URL lengkap
+        String imageUrl = destination.getImageUrl();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            response.setImageUrl(minioEndpoint + "/" + minioBucket + "/" + imageUrl);
+        } else {
+            response.setImageUrl(null);
+        }
         response.setDescription(destination.getDescription());
         response.setItinerary(destination.getItinerary());
         

@@ -189,7 +189,13 @@ public class AdminService {
                 .map(gallery -> {
                     Map<String, Object> galleryMap = new HashMap<>();
                     galleryMap.put("id", gallery.getId());
-                    galleryMap.put("url", gallery.getImageUrl());
+                    // Ubah url menjadi URL lengkap MinIO
+                    String galleryUrl = gallery.getImageUrl();
+                    if (galleryUrl != null && !galleryUrl.isEmpty()) {
+                        galleryMap.put("url", minioEndpoint + "/" + minioBucket + "/" + galleryUrl);
+                    } else {
+                        galleryMap.put("url", null);
+                    }
                     return galleryMap;
                 })
                 .collect(Collectors.toList());

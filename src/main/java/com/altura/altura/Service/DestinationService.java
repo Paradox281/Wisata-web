@@ -400,7 +400,13 @@ public class DestinationService {
                 response.setNamaDestinasi(destination.getName());
                 response.setDeskripsiDestinasi(destination.getDescription());
                 response.setHargaAsli(destination.getPrice());
-                response.setGambarDestinasi(destination.getImageUrl());
+                // Ubah gambarDestinasi menjadi URL lengkap MinIO
+                String gambarDestinasi = destination.getImageUrl();
+                if (gambarDestinasi != null && !gambarDestinasi.isEmpty()) {
+                    response.setGambarDestinasi(minioEndpoint + "/" + minioBucket + "/" + gambarDestinasi);
+                } else {
+                    response.setGambarDestinasi(null);
+                }
                 response.setLokasiDestinasi(destination.getLocation());
                 
                 // Hitung jumlah booking berdasarkan total_persons

@@ -101,7 +101,13 @@ public class AdminService {
                     response.setLocation(destination.getLocation());
                     response.setPrice(destination.getPrice());
                     response.setQuota(destination.getQuota());
-                    response.setImageUrl(destination.getImageUrl());
+                    // Ubah imageUrl menjadi URL lengkap
+                    String imageUrl = destination.getImageUrl();
+                    if (imageUrl != null && !imageUrl.isEmpty()) {
+                        response.setImageUrl(minioEndpoint + "/" + minioBucket + "/" + imageUrl);
+                    } else {
+                        response.setImageUrl(null);
+                    }
                     response.setDescription(destination.getDescription());
                     
                     // Set Itinerary
@@ -168,7 +174,13 @@ public class AdminService {
         destinationInfo.put("location", destination.getLocation());
         destinationInfo.put("price", destination.getPrice());
         destinationInfo.put("quota", destination.getQuota());
-        destinationInfo.put("image", destination.getImageUrl());
+        // Ubah imageUrl menjadi URL lengkap
+        String imageUrl = destination.getImageUrl();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            destinationInfo.put("image", minioEndpoint + "/" + minioBucket + "/" + imageUrl);
+        } else {
+            destinationInfo.put("image", null);
+        }
         destinationInfo.put("description", destination.getDescription());
         response.put("destination", destinationInfo);
         

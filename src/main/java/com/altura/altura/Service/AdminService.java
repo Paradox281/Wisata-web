@@ -370,6 +370,15 @@ public class AdminService {
                 .collect(Collectors.toList());
     }
 
+    public Map<String, Object> getAllUsersWithRevenue() {
+        Map<String, Object> response = new HashMap<>();
+        List<Map<String, Object>> users = getAllUsers();
+        double totalRevenue = calculateTotalRevenueForConfirmedBookings();
+        response.put("users", users);
+        response.put("totalRevenue", totalRevenue);
+        return response;
+    }
+
     public Map<String, Object> getAllTestimonials() {
         List<Testimonial> testimonials = testimonialRepository.findAll();
         Map<String, Object> response = new HashMap<>();

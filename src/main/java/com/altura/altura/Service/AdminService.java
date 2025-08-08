@@ -48,11 +48,10 @@ public class AdminService {
         // Total Users
         response.setTotalUsers(userRepository.count());
         
-        // Total Bookings (jumlah total_persons dari booking yang Confirmed)
+        // Total Bookings (jumlah booking yang Confirmed)
         response.setTotalBookings(bookingRepository.findAll().stream()
                 .filter(booking -> "Confirmed".equals(booking.getStatus()))
-                .mapToLong(Booking::getTotal_persons)
-                .sum());
+                .count());
         
         // Total Revenue (selisih antara harga asli per booking dan harga diskon yang tersimpan di booking Confirmed)
         response.setTotalRevenue(calculateTotalRevenueForConfirmedBookings());
@@ -64,8 +63,7 @@ public class AdminService {
                     dbr.setNamaDestinasi(destination.getName());
                     dbr.setJumlahBooking((int) destination.getBookings().stream()
                             .filter(booking -> "Confirmed".equals(booking.getStatus()))
-                            .mapToLong(Booking::getTotal_persons)
-                            .sum());
+                            .count());
                     return dbr;
                 })
                 .collect(Collectors.toList());

@@ -79,8 +79,8 @@ public class AdminService {
                 (double) allBookings.stream().filter(b -> "Confirmed".equals(b.getStatus())).count() / totalBookings * 100);
             bookingStatus.put("Cancelled", 
                 (double) allBookings.stream().filter(b -> "Cancelled".equals(b.getStatus())).count() / totalBookings * 100);
-            bookingStatus.put("Pending", 
-                (double) allBookings.stream().filter(b -> "Pending".equals(b.getStatus())).count() / totalBookings * 100);
+            bookingStatus.put("PENDING", 
+                (double) allBookings.stream().filter(b -> "PENDING".equals(b.getStatus())).count() / totalBookings * 100);
         }
         response.setBookingStatus(bookingStatus);
         

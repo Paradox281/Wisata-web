@@ -56,7 +56,11 @@ public class AdminController {
     @ApiResponse(responseCode = "403", description = "Unauthorized - Invalid or missing token")
     @GetMapping("/booking")
     public ResponseEntity<Map<String, Object>> getAllBookings() {
-        return createSuccessResponse("bookings", adminService.getAllBookings());
+        Map<String, Object> data = adminService.getAllBookingsWithRevenue();
+        Map<String, Object> response = new HashMap<>();
+        response.put("status", "success");
+        response.put("data", data);
+        return ResponseEntity.ok(response);
     }
 
     @Operation(summary = "Get booking by ID", description = "Get detailed information about a specific booking")

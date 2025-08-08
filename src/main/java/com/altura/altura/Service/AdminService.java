@@ -55,19 +55,7 @@ public class AdminService {
                 .sum());
         
         // Total Revenue (selisih antara harga asli per booking dan harga diskon yang tersimpan di booking Confirmed)
-        List<Booking> confirmedBookings = bookingRepository.findAll().stream()
-                .filter(booking -> "Confirmed".equals(booking.getStatus()))
-                .collect(Collectors.toList());
-
-        double totalOriginalPrice = confirmedBookings.stream()
-                .mapToDouble(booking -> booking.getDestination().getPrice() * booking.getTotal_persons())
-                .sum();
-
-        double totalDiscountedPrice = confirmedBookings.stream()
-                .mapToDouble(Booking::getTotalPrice)
-                .sum();
-
-        response.setTotalRevenue(totalOriginalPrice - totalDiscountedPrice);
+        response.setTotalRevenue(calculateTotalRevenueForConfirmedBookings());
         
         // Destination Bookings
         List<DestinationBookingResponse> destinationBookings = destinationRepository.findAll().stream()
@@ -99,6 +87,22 @@ public class AdminService {
         response.setBookingStatus(bookingStatus);
         
         return response;
+    }
+
+    private double calculateTotalRevenueForConfirmedBookings() {
+        List<Booking> confirmedBookings = bookingRepository.findAll().stream()
+                .filter(booking -> "Confirmed".equals(booking.getStatus()))
+                .collect(Collectors.toList());
+
+        double totalOriginalPrice = confirmedBookings.stream()
+                .mapToDouble(booking -> booking.getDestination().getPrice() * booking.getTotal_persons())
+                .sum();
+
+        double totalDiscountedPrice = confirmedBookings.stream()
+                .mapToDouble(Booking::getTotalPrice)
+                .sum();
+
+        return totalOriginalPrice - totalDiscountedPrice;
     }
 
     public List<DestinationResponse> getAllDestinations() {
@@ -266,6 +270,15 @@ public class AdminService {
                     return bookingMap;
                 })
                 .collect(Collectors.toList());
+    }
+
+    public Map<String, Object> getAllBookingsWithRevenue() {
+        Map<String, Object> response = new HashMap<>();
+        List<Map<String, Object>> bookings = getAllBookings();
+        double totalRevenue = calculateTotalRevenueForConfirmedBookings();
+        response.put("bookings", bookings);
+        response.put("totalRevenue", totalRevenue);
+        return response;
     }
 
     public Map<String, Object> getBookingById(Long id) {

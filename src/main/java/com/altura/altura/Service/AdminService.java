@@ -54,17 +54,20 @@ public class AdminService {
                 .mapToLong(Booking::getTotal_persons)
                 .sum());
         
-        // Total Revenue (selisih antara total price tour packages dan total price booking confirmed)
-        double totalTourPackagePrice = destinationRepository.findAll().stream()
-                .mapToDouble(Destination::getPrice)
-                .sum();
-        
-        double totalBookingPrice = bookingRepository.findAll().stream()
+        // Total Revenue (selisih antara harga asli per booking dan harga diskon yang tersimpan di booking Confirmed)
+        List<Booking> confirmedBookings = bookingRepository.findAll().stream()
                 .filter(booking -> "Confirmed".equals(booking.getStatus()))
+                .collect(Collectors.toList());
+
+        double totalOriginalPrice = confirmedBookings.stream()
+                .mapToDouble(booking -> booking.getDestination().getPrice() * booking.getTotal_persons())
+                .sum();
+
+        double totalDiscountedPrice = confirmedBookings.stream()
                 .mapToDouble(Booking::getTotalPrice)
                 .sum();
-        
-        response.setTotalRevenue(totalTourPackagePrice - totalBookingPrice);
+
+        response.setTotalRevenue(totalOriginalPrice - totalDiscountedPrice);
         
         // Destination Bookings
         List<DestinationBookingResponse> destinationBookings = destinationRepository.findAll().stream()

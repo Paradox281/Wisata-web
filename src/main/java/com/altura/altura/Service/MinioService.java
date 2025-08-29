@@ -1,6 +1,7 @@
 package com.altura.altura.Service;
 
 import io.minio.*;
+import io.minio.http.Method;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,6 +53,54 @@ public class MinioService {
             return response;
         } catch (Exception e) {
             throw new RuntimeException("Failed to download file from MinIO", e);
+        }
+    }
+
+    public boolean objectExists(String objectName) {
+        try {
+            minioClient.statObject(
+                StatObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(objectName)
+                    .build()
+            );
+            return true;
+        } catch (io.minio.errors.ErrorResponseException e) {
+            if (e.errorResponse() != null && "NoSuchKey".equalsIgnoreCase(e.errorResponse().code())) {
+                return false;
+            }
+            throw new RuntimeException("Failed to stat object", e);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to stat object", e);
+        }
+    }
+
+    public long getObjectSize(String objectName) {
+        try {
+            StatObjectResponse stat = minioClient.statObject(
+                StatObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(objectName)
+                    .build()
+            );
+            return stat.size();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get object size", e);
+        }
+    }
+
+    public String getPresignedGetUrl(String objectName, int expirySeconds) {
+        try {
+            return minioClient.getPresignedObjectUrl(
+                GetPresignedObjectUrlArgs.builder()
+                    .method(Method.GET)
+                    .bucket(bucketName)
+                    .object(objectName)
+                    .expiry(expirySeconds)
+                    .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to generate presigned URL", e);
         }
     }
 }

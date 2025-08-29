@@ -56,6 +56,22 @@ public class MinioService {
         }
     }
 
+    public InputStream downloadFileRange(String objectName, long offset, long length) {
+        try {
+            GetObjectResponse response = minioClient.getObject(
+                GetObjectArgs.builder()
+                    .bucket(bucketName)
+                    .object(objectName)
+                    .offset(offset)
+                    .length(length)
+                    .build()
+            );
+            return response;
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to download ranged file from MinIO", e);
+        }
+    }
+
     public boolean objectExists(String objectName) {
         try {
             minioClient.statObject(

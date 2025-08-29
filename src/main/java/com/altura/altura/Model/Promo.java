@@ -21,7 +21,7 @@ public class Promo {
     @Column(name = "deskripsi", columnDefinition = "TEXT")
     private String deskripsi;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_destinasi", nullable = false, foreignKey = @ForeignKey(name = "fk_destinasi_promo"))
     private Destination destination;
 

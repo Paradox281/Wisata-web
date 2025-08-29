@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpRange;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +26,33 @@ public class ApkDownloadController {
     private MinioService minioService;
 
     @Operation(summary = "Download file APK", description = "Download file .apk dari MinIO dengan dukungan resume (HTTP Range)")
+    @CrossOrigin(
+        origins = {
+            "http://localhost:3000",
+            "http://localhost:8081",
+            "http://localhost:19006",
+            "https://altura.up.railway.app",
+            "https://altura-website-production.up.railway.app"
+        },
+        allowedHeaders = {
+            "Authorization",
+            "Content-Type",
+            "X-Requested-With",
+            "Accept",
+            "Origin",
+            "Access-Control-Request-Method",
+            "Access-Control-Request-Headers",
+            "Range"
+        },
+        exposedHeaders = {
+            "Authorization",
+            "Content-Length",
+            "Content-Range",
+            "Accept-Ranges",
+            "Content-Disposition"
+        },
+        allowCredentials = "true"
+    )
     @GetMapping("/download")
     public ResponseEntity<InputStreamResource> downloadApk(
             @RequestHeader(value = "Range", required = false) String rangeHeader

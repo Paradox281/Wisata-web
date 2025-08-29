@@ -22,7 +22,7 @@ public class ApkDownloadController {
     @Operation(summary = "Download file APK", description = "Redirect ke presigned URL MinIO untuk unduhan stabil.")
     @GetMapping("/download")
     public ResponseEntity<Void> downloadApk() {
-        String filename = "altura-android.apk";
+        String filename = "application-8c2471a9-f522-48bd-9b47-b7cf42079783.apk";
         // URL bertanda tangan sementara agar browser mengunduh langsung dari MinIO
         String presignedUrl = minioService.getPresignedGetUrl(filename, 60 * 10); // 10 menit
 

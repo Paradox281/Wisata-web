@@ -13,10 +13,12 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ResponseBody;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 
 @RestController
@@ -29,11 +31,25 @@ public class ApkDownloadController {
     private static final Logger logger = LoggerFactory.getLogger(ApkDownloadController.class);
 
     @Operation(summary = "Download file APK", description = "Streaming file APK dengan dukungan resume (HTTP Range)")
-    @GetMapping("/download")
+    @RequestMapping(value = "/download", method = {RequestMethod.GET, RequestMethod.OPTIONS})
     @ResponseBody
     public ResponseEntity<?> downloadApk(
             @RequestHeader(value = "Range", required = false) String rangeHeader,
-            HttpServletResponse response) {
+            HttpServletResponse response,
+            HttpServletRequest request) {
+        
+        // Handle OPTIONS preflight request
+        if (request.getMethod().equals("OPTIONS")) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Access-Control-Allow-Origin", "https://altura-website-production.up.railway.app");
+            headers.add("Access-Control-Allow-Methods", "GET, OPTIONS");
+            headers.add("Access-Control-Allow-Headers", "Range, Content-Type, Accept, Authorization");
+            headers.add("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges, Content-Disposition");
+            headers.add("Access-Control-Max-Age", "3600");
+            headers.add("Access-Control-Allow-Credentials", "true");
+            
+            return ResponseEntity.ok().headers(headers).build();
+        }
         
         String filename = "application-8c2471a9-f522-48bd-9b47-b7cf42079783.apk";
 
@@ -42,10 +58,11 @@ public class ApkDownloadController {
             logger.info("Range header: {}", rangeHeader);
 
             // Set CORS headers manually for this specific endpoint
-            response.setHeader("Access-Control-Allow-Origin", "*");
+            response.setHeader("Access-Control-Allow-Origin", "https://altura-website-production.up.railway.app");
             response.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
-            response.setHeader("Access-Control-Allow-Headers", "Range, Content-Type, Accept");
+            response.setHeader("Access-Control-Allow-Headers", "Range, Content-Type, Accept, Authorization");
             response.setHeader("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges, Content-Disposition");
+            response.setHeader("Access-Control-Allow-Credentials", "true");
 
             // Check if file exists and get size
             long objectSize = minioService.getObjectSize(filename);
@@ -90,17 +107,5 @@ public class ApkDownloadController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error downloading APK: " + e.getMessage());
         }
-    }
-
-    @GetMapping("/download/options")
-    public ResponseEntity<Void> handleOptions() {
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Access-Control-Allow-Origin", "*");
-        headers.add("Access-Control-Allow-Methods", "GET, OPTIONS");
-        headers.add("Access-Control-Allow-Headers", "Range, Content-Type, Accept");
-        headers.add("Access-Control-Expose-Headers", "Content-Length, Content-Range, Accept-Ranges, Content-Disposition");
-        headers.add("Access-Control-Max-Age", "3600");
-        
-        return ResponseEntity.ok().headers(headers).build();
     }
 } 

@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.ByteArrayResource;
 import java.io.InputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 
 @RestController
@@ -28,7 +29,7 @@ public class ApkDownloadController {
 
     @Operation(summary = "Download file APK", description = "Download file APK langsung dari MinIO")
     @GetMapping("/download")
-    public ResponseEntity<Resource> downloadApk() {
+    public ResponseEntity<ByteArrayResource> downloadApk() {
         String filename = "application-8c2471a9-f522-48bd-9b47-b7cf42079783.apk";
 
         try {
@@ -49,17 +50,30 @@ public class ApkDownloadController {
                 throw new RuntimeException("Invalid file size: " + objectSize + " bytes");
             }
 
-            // Download file stream
+            // Download file stream and convert to byte array
             InputStream apkStream = minioService.downloadFile(filename);
-            logger.info("APK stream created successfully");
+            ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+            
+            int nRead;
+            byte[] data = new byte[16384];
+            while ((nRead = apkStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            buffer.flush();
+            
+            byte[] apkBytes = buffer.toByteArray();
+            apkStream.close();
+            buffer.close();
+            
+            logger.info("APK converted to byte array, size: {} bytes", apkBytes.length);
 
-            // Create resource from stream
-            Resource resource = new InputStreamResource(apkStream);
+            // Create resource from byte array
+            ByteArrayResource resource = new ByteArrayResource(apkBytes);
 
             // Set response headers for direct download
             HttpHeaders headers = new HttpHeaders();
             headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"");
-            headers.setContentLength(objectSize);
+            headers.setContentLength(apkBytes.length);
             headers.add(HttpHeaders.CACHE_CONTROL, "no-cache, no-store, must-revalidate");
             headers.add(HttpHeaders.PRAGMA, "no-cache");
             headers.add(HttpHeaders.EXPIRES, "0");
